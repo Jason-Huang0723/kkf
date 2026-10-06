@@ -294,12 +294,9 @@ function viewTheme(key) {
   if (TF.key !== key) { TF.key = key; TF.q = ''; TF.type = ''; TF.sub = ''; }
   const ps = PLANS.filter(p => inTheme(p, key));
   const so = subOptions(key, ps);
-  const terms = [...new Set(ps.map(p => p.sortTerm))];
-  const span = terms.length ? `${termLabel(Math.min(...terms) || 66)} – ${termLabel(Math.max(...terms))}` : '';
   $('band').innerHTML = `<div class="band">
     <p class="crumb"><a href="#plans">方案庫</a> ／ ${esc(t.name)}</p>
-    <h1 class="rule-title">${esc(t.name)}</h1>
-    <div class="stats"><span>${ps.length} 個方案</span><span>${span}</span></div></div>`;
+    <h1 class="rule-title">${esc(t.name)}</h1></div>`;
   const types = ['平服', '假服', '校村運動會', '信望愛平服'].filter(x => ps.some(p => p.type === x));
   $('view').innerHTML = `<main class="main hatch-light"><div class="wrap" style="display:flex;flex-direction:column;gap:18px">
     <div class="filterbar">
