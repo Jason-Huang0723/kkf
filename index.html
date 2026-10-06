@@ -140,20 +140,35 @@ body[data-view="home"] .btn-ghost{text-shadow:none;backdrop-filter:blur(2px)}
 
 /* plan table */
 .tbl-wrap{overflow-x:auto;background:var(--card);-webkit-overflow-scrolling:touch}
-.tbl-wrap table{border-collapse:collapse;width:100%;min-width:1100px}
-.tbl-wrap th,.tbl-wrap td{padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left}
-.tbl-wrap thead th{background:var(--card-2);font-size:13px;letter-spacing:.12em;color:var(--head);white-space:nowrap;font-weight:700}
+.tbl-wrap table{border-collapse:collapse;width:100%}
+.tbl-wrap th,.tbl-wrap td{padding:12px 11px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left}
+.tbl-wrap thead th{background:var(--card-2);font-size:13px;letter-spacing:.08em;color:var(--head);white-space:nowrap;font-weight:700}
 .tbl-wrap tbody tr:hover td{background:var(--card-2)}
-.tbl-wrap td.term{font-weight:700;color:var(--head);font-variant-numeric:tabular-nums;white-space:nowrap;position:sticky;left:0;background:var(--card);font-size:17px}
-.tbl-wrap thead th:first-child{position:sticky;left:0;z-index:1}
-.tbl-wrap td.name{min-width:10em}
+.tbl-wrap td.term{color:var(--head);font-variant-numeric:tabular-nums;white-space:nowrap;width:4.6em}
+.tbl-wrap td.term b{display:block;font-size:17px;line-height:1.3}
+.tbl-wrap td.term span{display:block;font-size:12px;color:var(--ink-2);margin-top:2px}
+.tbl-wrap td.name{min-width:7.5em;max-width:13em}
 .tbl-wrap td.name a{display:block;font-weight:700;color:var(--head);text-decoration:none;font-size:16px;margin-bottom:6px;line-height:1.5}
 .tbl-wrap td.name a:hover{text-decoration:underline}
-.tbl-wrap td.goal{min-width:16em;max-width:30em;color:var(--ink-2);font-size:14px;line-height:1.7}
-.tbl-wrap td.tl{font-size:14px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.tbl-wrap td.goal{min-width:12em;color:var(--ink-2);font-size:14px;line-height:1.7}
+.tbl-wrap td.tl{font-size:13px;color:var(--ink-2);font-variant-numeric:tabular-nums;width:6.5em}
+.tbl-wrap td.doccell{white-space:nowrap;width:1%}
+.tbl-wrap td.doccell .doclink{display:flex;padding:2px 0 6px}
 .nowrap{white-space:nowrap}
 .tagcell span{display:inline-block;margin:0 8px 4px 0;font-size:13px;color:var(--link);white-space:nowrap}
-.tbl-wrap .tagcell{min-width:8em;max-width:12em}
+.tbl-wrap .tagcell{max-width:9em}
+@media (max-width:760px){
+  .ptable thead{display:none}
+  .ptable,.ptable tbody{display:block}
+  .ptable tr{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;padding:14px 4px;border-bottom:1px solid var(--line)}
+  .ptable td{display:block;border:0;padding:0;width:auto!important;max-width:none!important;min-width:0!important}
+  .ptable td.term{grid-column:1;grid-row:1}
+  .ptable td.name{grid-column:2;grid-row:1}
+  .ptable td.goal,.ptable td.tagcell,.ptable td.tl,.ptable td.doccell{grid-column:1 / -1}
+  .ptable td.tagcell span{margin-bottom:0}
+  .ptable td.doccell{display:flex;flex-wrap:wrap;gap:4px 18px}
+  .tbl-wrap{padding-inline:12px}
+}
 .doclink{display:inline-flex;align-items:center;gap:6px;color:var(--link);font-size:14px;font-weight:700;text-decoration:none;padding:6px 0}
 .doclink:hover span{text-decoration:underline}
 .doclink-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px}
@@ -231,19 +246,18 @@ function planTable(list) {
   if (!list.length) return '<div class="empty">沒有符合的方案。</div>';
   const rows = list.map(p => {
     const sub = p.term === 37 ? '<span class="pill warn">撰寫中</span>' : '';
-    const g = p.goal.length > 70 ? p.goal.slice(0, 70) + '…' : p.goal;
+    const g = p.goal.length > 60 ? p.goal.slice(0, 60) + '…' : p.goal;
     const tl = [p.mins, p.people].filter(Boolean).join(' / ') || '—';
-    const ty = esc(p.type) + (p.site && p.site !== '瑞北' ? `<br><span class="muted">${esc(p.site)}</span>` : '');
-    return `<tr><td class="term">${termShort(p.term)}</td>
+    const ty = esc(p.type) + (p.site && p.site !== '瑞北' ? `・${esc(p.site)}` : '');
+    const links = [p.sheet && p.sheet.url ? sheetLink(p) : '', p.folder && p.folder.url ? folderLink(p) : ''].join('') || '<span class="muted">—</span>';
+    return `<tr><td class="term"><b>${termShort(p.term)}</b><span>${ty}</span></td>
       <td class="name"><a href="#p-${p.id}">${esc(p.title)}</a>${sub}</td>
-      <td class="nowrap">${ty}</td>
       <td class="tagcell">${p.tags.map(t => `<span>#${esc(t)}</span>`).join('')}</td>
       <td class="goal">${esc(g)}</td>
-      <td class="nowrap tl">${esc(tl)}</td>
-      <td class="nowrap">${sheetLink(p)}</td>
-      <td class="nowrap">${folderLink(p)}</td></tr>`;
+      <td class="tl">${esc(tl)}</td>
+      <td class="doccell">${links}</td></tr>`;
   }).join('');
-  return `<div class="tbl-wrap"><table><thead><tr><th scope="col">期別</th><th scope="col">方案名</th><th scope="col">平/假服</th><th scope="col">標籤</th><th scope="col">目標</th><th scope="col">時長 / 人力</th><th scope="col">方案紙</th><th scope="col">方案資料夾</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+  return `<div class="tbl-wrap"><table class="ptable"><thead><tr><th scope="col">期別</th><th scope="col">方案名</th><th scope="col">標籤</th><th scope="col">目標</th><th scope="col">時長 / 人力</th><th scope="col">方案紙・資料夾</th></tr></thead><tbody>${rows}</tbody></table></div>`;
 }
 /* ---------- home ---------- */
 function viewHome() {
