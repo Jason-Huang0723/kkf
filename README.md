@@ -2,7 +2,7 @@
 
 台大慈幼山友歷屆方案（早期、第 1–37 期）的查詢網站。
 
-**網站：** 開啟 GitHub Pages 後，網址為 `https://<帳號>.github.io/kkf-plans/`
+**網站：** 網址：見本 repo 的 GitHub Pages 設定
 
 ## 內容
 
