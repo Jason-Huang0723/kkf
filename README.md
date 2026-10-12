@@ -2,7 +2,7 @@
 
 台大慈幼山友歷屆方案（早期、第 1–37 期）的查詢網站。
 
-**網站：** 網址：見本 repo 的 GitHub Pages 設定
+**網站：** https://ntu-kkf.github.io/kkf/
 
 ## 內容
 
